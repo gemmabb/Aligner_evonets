@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aligner_evolving"
+license = { file = "LICENSE" }
+version = "0.1.0"
+description = "Source package for the alignment_evolving_multigraphs project"
+authors = [
+    {name = "Gemma Bel-Bordes", email = "gemma.bel@urv.cat"}
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    "matplotlib",
+    "numba",
+    "numpy",
+    "pandas",
+    "seaborn",
+    "tqdm",
+    "xlrd"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
