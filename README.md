@@ -11,21 +11,21 @@ This repository contains the code accompanying the paper:
 Clone the repository:
 
 ```bash
-`git clone https://github.com/gemmabb/alignment_evolving_multigraphs.git`
-`cd alignment_evolving_multigraphs`
+git clone https://github.com/gemmabb/alignment_evolving_multigraphs.git
+cd alignment_evolving_multigraphs
 ```
 
 We recommend creating a dedicated Python environment. For example, using Python 3.10:
 
 ```bash
-`python3.10 -m venv evoalign`
-`source evoalign/bin/activate`
+python3.10 -m venv evoalign
+source evoalign/bin/activate
 ```
 
 Install the package and its dependencies:
 
 ```bash
-`python -m pip install -e .`
+python -m pip install -e .
 
 And you are ready to go!
 
