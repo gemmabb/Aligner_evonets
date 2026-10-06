@@ -42,13 +42,23 @@ Thumbs.db
 # Data
 # ============================================================
 
-# Raw data: do not commit
-data/raw/
+# =========================
+# Raw data
+# =========================
+# Ignore CSV files
+data/raw/**/*.csv
 
-# Processed data: ignore everything except reduced_*.csv
+# =========================
+# Processed data
+# =========================
+# Ignore everything
 data/processed/*
-!data/processed/reduced_*.csv
 
+# Allow subdirectories
+!data/processed/**/
+
+# Allow only reduced_* files
+!data/processed/**/reduced_*
 
 # ============================================================
 # Results
