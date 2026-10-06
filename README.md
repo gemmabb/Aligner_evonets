@@ -26,11 +26,12 @@ Install the package and its dependencies:
 
 ```bash
 python -m pip install -e .
+```
 
 And you are ready to go!
 
 If one wishes to reproduce the exact same environment as in the original paper, the requirements are in `requirements.txt`.
-```
+
 
 ## Data
 
