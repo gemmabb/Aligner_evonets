@@ -128,7 +128,7 @@ import pickle
 
 We now load the data. In this example, we will consider a subset of the *C. elegans* connectomes$^{1}$.  
 
-We will perform a group-guided alignment by considering the spatial location of the neurons (left–right, in the case of bilateral neurons). We use a reduced version of the connectomes containing only 60 neurons.  
+We will perform a group-guided alignment by considering the spatial location of the neurons (left–right, in the case of bilateral neurons). We use a reduced version of the connectomes containing only 60 neurons (we provide the dataset, but more details are in `reproducibility_paper/data_processing_celegans.ipynb`).  
 
 Data required:
 * `A`: adjacency matrices of the snapshots to be aligned (size $T \times N \times N$), where $T$ is the number of snapshots and $N$ is the number of nodes.  
@@ -142,7 +142,7 @@ $^{1}$ Witvliet, D. *et al.* Connectomes across development reveal principles of
 #Adjacency matrices:
 labels = ["L1.1", "L1.2", "L1.3", "L1.4", "L2", "L3", "A.1", "A.2"]
 
-A = helper_networks.load_networks(data_folder="../data/processed/celegans/", 
+A = helper_networks.load_networks(data_folder="/data/celegans/", 
                                   net_ids=[l for l in range(len(labels))], file_prefix="reduced_")
 
 T, N, N = A.shape
@@ -164,14 +164,14 @@ plt.show()
 
 
     
-![png](figures_tutorial/output_6_0.png)
+![png](tutorial/figures_tutorial/output_6_0.png)
     
 
 
 
 ```python
 #Groups:
-neuron_metadata = pd.read_csv("../data/processed/celegans/reduced_neuron_metadata.csv", index_col=0) 
+neuron_metadata = pd.read_csv("data/celegans/reduced_neuron_metadata.csv", index_col=0) 
 groups = np.array(neuron_metadata["location"])
 print(groups)
 ```
@@ -278,7 +278,7 @@ plt.show()
 
 
     
-![png](figures_tutorial/output_14_1.png)
+![png](tutorial/figures_tutorial/output_14_1.png)
     
 
 
@@ -301,7 +301,7 @@ helper_analysis.show_alignment(ensemble_node_mapping, N, T, True, True, labels,
 
 
     
-![png](figures_tutorial/output_15_1.png)
+![png](tutorial/figures_tutorial/output_15_1.png)
     
 
 
@@ -327,7 +327,7 @@ plt.tight_layout(); plt.show()
 
 
     
-![png](figures_tutorial/output_17_0.png)
+![png](tutorial/figures_tutorial/output_17_0.png)
     
 
 
@@ -367,7 +367,7 @@ plt.show()
 
 
     
-![png](figures_tutorial/output_21_0.png)
+![png](tutorial/figures_tutorial/output_21_0.png)
 
 _____________
-For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `2_analysis_alignment.ipynb`).
+For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `tutorial/2_analysis_alignment.ipynb`). And to reproduce experiments from the paper, see folder `reproducibility_paper`, with all the processed networks used in the study and the corresponding code.

@@ -681,7 +681,195 @@ def sampling_poisson_anchors(A, P, betas, S, sampleFrom, sampleFreq, anchors, fi
 
     return Esweeps_r, samples, groundState, MCacceptance_rate
 
+def sampling_poisson_groups_fixingalphas(A, P, betas, S, sampleFrom, sampleFreq, groups, filesave):
+    """
+    Perform Monte Carlo simulation and sampling to obtain the alignment of matrices A
+    with the lowest energy and the samples at T=1 using Parallel Tempering.
 
+    Parameters:
+        A (list of np.array): Adjacency matrices of the networks.
+        P (list of np.array): Initial permutation matrices of the networks.
+        betas (np.array): Array of beta (inverse temperature).
+        exchangeMethod (function): Function for the exchange method (e.g., metropolis_gaussian).
+        S (int): Number of sweeps.
+        sampleFrom (int): Sweep number to start sampling from.
+        sampleFreq (int): Number of sweeps between consecutive samplings.
+
+    Returns:
+        Esweeps (list of np.array): Energies over sweeps for each replica.
+        samples (list): Node orders from sampling.
+        groundState (list): Node order in the ground state configuration.
+        MCacceptance (float): Monte Carlo acceptance rate during sampling.
+    """
+    # Group boundary array 
+    gloc = np.array(group_boundaries(groups))
+    
+    N = A[0].shape[0]  # Number of nodes
+    T = len(A)         # Number of networks
+    B = len(betas)     # Number of beta (temperature) replicas
+
+    MCsteps = T * N
+    b_beta1 = np.where(betas == 1)[0][0]  # Index of beta = 1 replica
+
+    # Initial energy and parameters
+    ST = helper_poisson.get_ST(A)
+    Salpha = T #Salpha=SUM_t(alpha_t), fixing all alha_t to 1, we get 1*T
+
+    # Energy calculation
+    Ei = helper_poisson.calculateEnergy_total(A, P, Salpha, N, T)
+
+    # Configuration replicas (one for each beta)
+    A_r = np.empty((B, *A.shape), A.dtype)
+    P_r = np.empty((B, *P.shape), P.dtype)
+    Esweeps_r = np.zeros((B, S+1), float)
+    Esteps_r = np.zeros((B, S*MCsteps+1), float)
+    for b in range(B):
+        A_r[b] = A.copy() 
+        P_r[b] = P.copy()
+        Esweeps_r[b][0] = Ei
+        Esteps_r[b][0] = Ei
+    step_idx_r = np.zeros((B), int) #for each beta, to store the id of the MC step (for storing the E_step)
+
+    # Variables to store alignment information
+    MCacceptance = 0
+    stepsSampling = 0
+    
+    numSamples = int((S - sampleFrom) / sampleFreq)
+    samples = np.empty((numSamples, T, N), dtype=np.int64) 
+    sample_idx = 0
+
+    # Monte Carlo sampling
+    for sweep in tqdm(range(1, S + 1), desc="Sweeps"):
+        for step in range(MCsteps):
+            t = np.random.randint(0, T)
+            for b in range(B):
+                MCexchange = metropolis_poisson_groups(t, A_r, P_r, betas, Esteps_r, Salpha, b, N, T, step_idx_r, gloc)
+
+                if sweep > sampleFrom and sweep % sampleFreq == 0 and b == b_beta1:
+                    stepsSampling += 1
+                    MCacceptance += MCexchange
+
+        if (sweep % 1000 == 0):
+            with open(f"{filesave}_sweep{sweep}.pkl", 'wb') as f:
+                pickle.dump([Esweeps_r, P_r], f)
+            print(f"Data saved for sweep {sweep}.")
+
+        # Parallel tempering exchanges
+        oddPT = (sweep % 2 != 0)
+        PTexchange = parallelTemperingExchange_poisson(P_r, Esteps_r, betas, oddPT, step_idx_r)
+
+        # Update energy sweeps
+        for b in range(B):
+            Esweeps_r[b, sweep] = Esteps_r[b][step_idx_r[b]]
+
+        # Sampling
+        if sweep > sampleFrom and sweep % sampleFreq == 0:
+            samples[sample_idx] = P_r[b_beta1]
+            sample_idx += 1
+
+    # Ground state configuration
+    b_minE = np.argmin([Esweeps_r[b][-1] for b in range(B)])
+    print(f"Replica with minimum energy: {b_minE}")
+    groundState = P_r[b_minE]
+
+    # Monte Carlo acceptance rate
+    MCacceptance_rate = MCacceptance / stepsSampling if stepsSampling > 0 else 0
+
+    return Esweeps_r, samples, groundState, MCacceptance_rate
+
+def sampling_poisson_fixingalphas(A, P, betas, S, sampleFrom, sampleFreq, filesave):
+    """
+    Perform Monte Carlo simulation and sampling to obtain the alignment of matrices A
+    with the lowest energy and the samples at T=1 using Parallel Tempering.
+
+    Parameters:
+        A (list of np.array): Adjacency matrices of the networks.
+        P (list of np.array): Initial permutation matrices of the networks.
+        betas (np.array): Array of beta (inverse temperature).
+        exchangeMethod (function): Function for the exchange method (e.g., metropolis_gaussian).
+        S (int): Number of sweeps.
+        sampleFrom (int): Sweep number to start sampling from.
+        sampleFreq (int): Number of sweeps between consecutive samplings.
+
+    Returns:
+        Esweeps (list of np.array): Energies over sweeps for each replica.
+        samples (list): Node orders from sampling.
+        groundState (list): Node order in the ground state configuration.
+        MCacceptance (float): Monte Carlo acceptance rate during sampling.
+    """
+    N = A[0].shape[0]  # Number of nodes
+    T = len(A)         # Number of networks
+    B = len(betas)     # Number of beta (temperature) replicas
+
+    MCsteps = T * N
+    b_beta1 = np.where(betas == 1)[0][0]  # Index of beta = 1 replica
+
+    # Initial energy and parameters
+    ST = helper_poisson.get_ST(A)
+    Salpha = T #Salpha=SUM_t(alpha_t), fixing all alha_t to 1, we get 1*T
+
+    # Energy calculation
+    Ei = helper_poisson.calculateEnergy_total(A, P, Salpha, N, T)
+
+    # Configuration replicas (one for each beta)
+    A_r = np.empty((B, *A.shape), A.dtype)
+    P_r = np.empty((B, *P.shape), P.dtype)
+    Esweeps_r = np.zeros((B, S+1), float)
+    Esteps_r = np.zeros((B, S*MCsteps+1), float)
+    for b in range(B):
+        A_r[b] = A.copy() 
+        P_r[b] = P.copy()
+        Esweeps_r[b][0] = Ei
+        Esteps_r[b][0] = Ei
+    step_idx_r = np.zeros((B), int) #for each beta, to store the id of the MC step (for storing the E_step)
+
+    # Variables to store alignment information
+    MCacceptance = 0
+    stepsSampling = 0
+    
+    numSamples = int((S - sampleFrom) / sampleFreq)
+    samples = np.empty((numSamples, T, N), dtype=np.int64) 
+    sample_idx = 0
+
+    # Monte Carlo sampling
+    for sweep in tqdm(range(1, S + 1), desc="Sweeps"):
+        for step in range(MCsteps):
+            t = np.random.randint(0, T)
+            for b in range(B):
+                MCexchange = metropolis_poisson(t, A_r, P_r, betas, Esteps_r, Salpha, b, N, T, step_idx_r)
+
+                if sweep > sampleFrom and sweep % sampleFreq == 0 and b == b_beta1:
+                    stepsSampling += 1
+                    MCacceptance += MCexchange
+
+        if (sweep % 1000 == 0):
+            with open(f"{filesave}_sweep{sweep}.pkl", 'wb') as f:
+                pickle.dump([Esweeps_r, P_r], f)
+            print(f"Data saved for sweep {sweep}.")
+
+        # Parallel tempering exchanges
+        oddPT = (sweep % 2 != 0)
+        PTexchange = parallelTemperingExchange_poisson(P_r, Esteps_r, betas, oddPT, step_idx_r)
+
+        # Update energy sweeps
+        for b in range(B):
+            Esweeps_r[b, sweep] = Esteps_r[b][step_idx_r[b]]
+
+        # Sampling
+        if sweep > sampleFrom and sweep % sampleFreq == 0:
+            samples[sample_idx] = P_r[b_beta1]
+            sample_idx += 1
+
+    # Ground state configuration
+    b_minE = np.argmin([Esweeps_r[b][-1] for b in range(B)])
+    print(f"Replica with minimum energy: {b_minE}")
+    groundState = P_r[b_minE]
+
+    # Monte Carlo acceptance rate
+    MCacceptance_rate = MCacceptance / stepsSampling if stepsSampling > 0 else 0
+
+    return Esweeps_r, samples, groundState, MCacceptance_rate
+    
 def sampling_gaussian(A, P, betas, S, sampleFrom, sampleFreq, convSteps, convDiff, internalFileName=None):
     """
     sampling_gaussian:

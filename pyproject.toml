@@ -19,7 +19,8 @@ dependencies = [
     "pandas",
     "seaborn",
     "tqdm",
-    "xlrd"
+    "xlrd",
+    "openpyxl"
 ]
 
 [tool.setuptools.packages.find]

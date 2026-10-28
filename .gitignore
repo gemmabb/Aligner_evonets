@@ -46,19 +46,14 @@ Thumbs.db
 # Raw data
 # =========================
 # Ignore CSV files
-data/raw/**/*.csv
+reproducibility_paper/data/raw/**/*.csv
+reproducibility_paper/data/raw/**/*.xlsx
+reproducibility_paper/data/raw/**/*.dat
 
 # =========================
 # Processed data
 # =========================
-# Ignore everything
-data/processed/*
-
-# Allow subdirectories
-!data/processed/**/
-
-# Allow only reduced_* files
-!data/processed/**/reduced_*
+#allow
 
 # ============================================================
 # Results
