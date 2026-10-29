@@ -8,7 +8,7 @@ This repository contains the code accompanying the paper:
 
 ## Installation
 
-Clone the repository:
+Clone the repository (this should take less than a minute):
 
 ```bash
 git clone https://github.com/gemmabb/Aligner_evonets.git
@@ -22,7 +22,7 @@ python3.10 -m virtualenv evoalign
 source evoalign/bin/activate
 ```
 
-Install the package and its dependencies:
+Install the package and its dependencies (this should take 1–2 minutes):
 
 ```bash
 python -m pip install -e .
