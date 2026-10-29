@@ -21,7 +21,7 @@ dependencies = [
     "tqdm",
     "xlrd",
     "openpyxl",
-    "sklearn",
+    "scikit-learn",
     "scipy",
     "jupyter"
 ]
