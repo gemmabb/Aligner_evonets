@@ -11,8 +11,8 @@ This repository contains the code accompanying the paper:
 Clone the repository:
 
 ```bash
-git clone https://github.com/gemmabb/alignment_evolving_multigraphs.git
-cd alignment_evolving_multigraphs
+git clone https://github.com/gemmabb/Aligner_evonets.git
+cd Aligner_evonets
 ```
 
 We recommend creating a dedicated Python environment. For example, using Python 3.10:
