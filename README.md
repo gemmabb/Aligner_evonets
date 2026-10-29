@@ -8,40 +8,55 @@ This repository contains the code accompanying the paper:
 
 ## Installation
 
-Clone the repository:
+Clone the repository (this should take less than a minute):
 
 ```bash
-git clone https://github.com/gemmabb/alignment_evolving_multigraphs.git
-cd alignment_evolving_multigraphs
+git clone https://github.com/gemmabb/Aligner_evonets.git
+cd Aligner_evonets
 ```
 
 We recommend creating a dedicated Python environment. For example, using Python 3.10:
 
 ```bash
-python3.10 -m venv evoalign
+python3.10 -m virtualenv evoalign
 source evoalign/bin/activate
 ```
+### Install the package and its dependencies
 
-Install the package and its dependencies:
+This should take approximately 1–2 minutes:
 
 ```bash
 python -m pip install -e .
 ```
 
-And you are ready to go!
+And you’re ready to go! We recommend starting with the tutorial.
 
-If one wishes to reproduce the exact same environment as in the original paper, the requirements are in `requirements.txt`.
+### Run the tutorial
+
+To open the tutorial notebook, start Jupyter:
+
+```bash
+jupyter notebook
+```
+
+Then open `tutorials/0_tutorial.ipynb` in your browser and follow the examples.
+
+### Reproducing the paper's experiments
+
+To reproduce the experiments, install the dependencies listed in `requirements.txt`:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The experiments in `reproducibility_paper/` include the code and instructions needed to reproduce the results reported in the paper.
 
 
 ## Data
 
-The datasets used in the paper are publicly available datasets that are not owned or distributed by the authors. Therefore, the original datasets are not included in this repository.
+The datasets used in this paper are publicly available and were originally published by other authors. The raw datasets are not included in this repository, both because they are not owned by the authors and because of their storage requirements. However, reduced versions of the connectome matrices are provided in `tutorials/data/` as example data for running the tutorial.
 
-For each dataset, `data/raw/` contains a README with instructions for downloading the corresponding original data and placing it in the appropriate directory.
-
-The repository also provides tutorials showing how to process the downloaded data into the format required by our method (see `tutorials/data/`).
-
-For convenience, we provide reduced versions of the connectome matrices  in `data/processed/`. These reduced matrices are intended as example data, allowing the tutorial to be run without downloading the original datasets.
+However, to facilitate reproducibility, the `reproducibility_paper/` folder contains the processed datasets used as inputs to our model. The raw data are not redistributed; instead, the `data/raw/` subfolders contain README files with instructions for downloading the original datasets. The corresponding notebooks (`data_processing_[dataset].ipynb`) can then be used to reproduce the preprocessing steps and obtain the processed datasets provided in the repository. Information about the data sources and licences is available in the accompanying README file.
 
 ## Tutorial
 
@@ -58,16 +73,22 @@ The tutorial can be run directly using the example matrices provided in `data/pr
 ## Repository structure
 
 ```text
-alignment_evolving_multigraphs/
-├── data/
-│   ├── raw/          # Instructions for downloading original datasets
-│   └── processed/    
-│       └── celegans/ # Reduced matrices of connectomes to run the tutorial
+Aligner_evonets/
+├── tutorials/                       # Tutorials using reduced example data
+│   ├── data/
+│   │   └── celegans/                # Reduced connectome dataset
+│   └── xxx.ipynb                    # Tutorial notebooks
+├── reproducibility_paper/           # Reproducing the paper's experiments
+│   ├── data/
+│   │   ├── raw/                     # Instructions for downloading raw datasets
+│   │   └── processed/               # Processed datasets used by the model
+│   └── experiment_xxx.ipynb         # Experiment notebooks
 ├── src/
-│   └── aligner/      # Package source code
-├── requirements.txt  # Tested package versions
-├── pyproject.toml    # Package configuration
-└── README.md
+│   └── aligner/                     # Package source code
+├── pyproject.toml                   # Package configuration
+├── requirements.txt                 # Tested dependency versions
+├── CITATION.txt                     # Citation information
+└── LICENSE.txt                      # Code licence
 ```
 
 ## Citation
@@ -130,9 +151,9 @@ We now load the data. In this example, we will consider a subset of the *C. eleg
 
 We will perform a group-guided alignment by considering the spatial location of the neurons (left–right, in the case of bilateral neurons). We use a reduced version of the connectomes containing only 60 neurons (we provide the dataset, but more details are in `reproducibility_paper/data_processing_celegans.ipynb`).  
 
-Data required:
+Required inputs; to use Aligner with your own data, prepare the following inputs:
 * `A`: adjacency matrices of the snapshots to be aligned (size $T \times N \times N$), where $T$ is the number of snapshots and $N$ is the number of nodes.  
-* `groups`: array indicating the group membership of each neuron (in the same order as they appear in `A`). If one desires to do the alignment without groups, set `groups = None`.
+* `groups`: array indicating the group membership of each node (in the same order as they appear in `A`). If one desires to do the alignment without groups, set `groups = None`.
 
 $^{1}$ Witvliet, D. *et al.* Connectomes across development reveal principles of brain maturation. *Nature* **596**, 257–261 (2021). [https://doi.org/10.1038/s41586-021-03778-8](https://doi.org/10.1038/s41586-021-03778-8)
 
@@ -142,7 +163,7 @@ $^{1}$ Witvliet, D. *et al.* Connectomes across development reveal principles of
 #Adjacency matrices:
 labels = ["L1.1", "L1.2", "L1.3", "L1.4", "L2", "L3", "A.1", "A.2"]
 
-A = helper_networks.load_networks(data_folder="/data/celegans/", 
+A = helper_networks.load_networks(data_folder="tutorials/data/celegans/", 
                                   net_ids=[l for l in range(len(labels))], file_prefix="reduced_")
 
 T, N, N = A.shape
@@ -164,14 +185,14 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_6_0.png)
+![png](tutorials/figures_tutorial/output_6_0.png)
     
 
 
 
 ```python
 #Groups:
-neuron_metadata = pd.read_csv("data/celegans/reduced_neuron_metadata.csv", index_col=0) 
+neuron_metadata = pd.read_csv("tutorials/data/celegans/reduced_neuron_metadata.csv", index_col=0) 
 groups = np.array(neuron_metadata["location"])
 print(groups)
 ```
@@ -278,7 +299,7 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_14_1.png)
+![png](tutorials/figures_tutorial/output_14_1.png)
     
 
 
@@ -301,7 +322,7 @@ helper_analysis.show_alignment(ensemble_node_mapping, N, T, True, True, labels,
 
 
     
-![png](tutorial/figures_tutorial/output_15_1.png)
+![png](tutorials/figures_tutorial/output_15_1.png)
     
 
 
@@ -327,7 +348,7 @@ plt.tight_layout(); plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_17_0.png)
+![png](tutorials/figures_tutorial/output_17_0.png)
     
 
 
@@ -367,7 +388,7 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_21_0.png)
+![png](tutorials/figures_tutorial/output_21_0.png)
 
 _____________
 For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `tutorial/2_analysis_alignment.ipynb`). And to reproduce experiments from the paper, see folder `reproducibility_paper`, with all the processed networks used in the study and the corresponding code.

@@ -20,7 +20,10 @@ dependencies = [
     "seaborn",
     "tqdm",
     "xlrd",
-    "openpyxl"
+    "openpyxl",
+    "sklearn",
+    "scipy",
+    "jupyter"
 ]
 
 [tool.setuptools.packages.find]
