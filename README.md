@@ -164,7 +164,7 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_6_0.png)
+![png](tutorials/figures_tutorial/output_6_0.png)
     
 
 
@@ -278,7 +278,7 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_14_1.png)
+![png](tutorials/figures_tutorial/output_14_1.png)
     
 
 
@@ -301,7 +301,7 @@ helper_analysis.show_alignment(ensemble_node_mapping, N, T, True, True, labels,
 
 
     
-![png](tutorial/figures_tutorial/output_15_1.png)
+![png](tutorials/figures_tutorial/output_15_1.png)
     
 
 
@@ -327,7 +327,7 @@ plt.tight_layout(); plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_17_0.png)
+![png](tutorials/figures_tutorial/output_17_0.png)
     
 
 
@@ -367,7 +367,7 @@ plt.show()
 
 
     
-![png](tutorial/figures_tutorial/output_21_0.png)
+![png](tutorials/figures_tutorial/output_21_0.png)
 
 _____________
 For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `tutorial/2_analysis_alignment.ipynb`). And to reproduce experiments from the paper, see folder `reproducibility_paper`, with all the processed networks used in the study and the corresponding code.
