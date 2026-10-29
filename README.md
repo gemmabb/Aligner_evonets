@@ -6,7 +6,7 @@ This repository contains the code accompanying the paper:
 > **Probabilistic alignment of evolving multigraphs and weighted networks.**
 > [...]
 
-## Installation
+## Installation and usage
 
 Clone the repository (this should take less than a minute):
 
@@ -15,10 +15,10 @@ git clone https://github.com/gemmabb/Aligner_evonets.git
 cd Aligner_evonets
 ```
 
-We recommend creating a dedicated Python environment. For example, using Python 3.10:
+We recommend creating a dedicated Python environment. For example:
 
 ```bash
-python3.10 -m virtualenv evoalign
+python -m virtualenv evoalign
 source evoalign/bin/activate
 ```
 ### Install the package and its dependencies
@@ -54,21 +54,11 @@ The experiments in `reproducibility_paper/` include the code and instructions ne
 
 ## Data
 
-The datasets used in this paper are publicly available and were originally published by other authors. The raw datasets are not included in this repository, both because they are not owned by the authors and because of their storage requirements. However, reduced versions of the connectome matrices are provided in `tutorials/data/` as example data for running the tutorial.
+The datasets used in this paper are publicly available and were originally published by other authors. The raw datasets are not included in this repository because they are not owned by the authors and, in some cases, require substantial storage space.
 
-However, to facilitate reproducibility, the `reproducibility_paper/` folder contains the processed datasets used as inputs to our model. The raw data are not redistributed; instead, the `data/raw/` subfolders contain README files with instructions for downloading the original datasets. The corresponding notebooks (`data_processing_[dataset].ipynb`) can then be used to reproduce the preprocessing steps and obtain the processed datasets provided in the repository. Information about the data sources and licences is available in the accompanying README file.
+Reduced connectome matrices are provided in `tutorials/data/` so that users can run the tutorial without downloading the full datasets.
 
-## Tutorial
-
-The accompanying tutorial demonstrates the main functionalities of the package:
-
-* Aligning multiple snapshots of an evolving multigraph or weighted network.
-* Analysing the resulting alignments.
-* Generating unobserved network snapshots.
-
-The tutorial can be run directly using the example matrices provided in `data/processed/celegans/`.
-
-(For the full datasets, follow the dataset-specific instructions in `data/raw/` and then use the provided data-processing tutorials.)
+For reproducibility, the `reproducibility_paper/` directory contains the processed datasets used as inputs to our model. The original datasets are not redistributed; instead, the corresponding data/raw/ directories contain README files explaining how to obtain them. The notebooks named data_processing_[dataset].ipynb document the preprocessing steps used to produce the processed datasets. Please consult the accompanying data README for information about the original sources, licences, and attribution requirements.
 
 ## Repository structure
 
@@ -101,7 +91,7 @@ If you use this code, please cite:
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0 or later](LICENSE) — a strong copyleft open-source license that allows you to use, modify, and redistribute the code, provided that distributed derivative works remain under the same license.
+This project is licensed under the [GNU General Public License v3.0 or later](LICENSE.txt) — a strong copyleft open-source license that allows you to use, modify, and redistribute the code, provided that distributed derivative works remain under the same license.
 
 [![License: GPL v3 or later](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
@@ -125,7 +115,15 @@ See the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.h
 
 _________________________________
 
-# TUTORIAL: main functionalities
+# Tutorial
+
+The accompanying tutorial demonstrates the main functionalities of the package:
+
+* Aligning multiple snapshots of an evolving multigraph or weighted network.
+* Analysing the resulting alignments.
+* Generating unobserved network snapshots.
+
+The tutorial can be run directly using the provided example matrices. (For the full datasets, follow the dataset-specific instructions in `data/raw/` and then use the provided data-processing tutorials.)
 
 Same as `tutorials/0_tutorial.ipynb`.
 
@@ -391,4 +389,4 @@ plt.show()
 ![png](tutorials/figures_tutorial/output_21_0.png)
 
 _____________
-For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `tutorial/2_analysis_alignment.ipynb`). And to reproduce experiments from the paper, see folder `reproducibility_paper`, with all the processed networks used in the study and the corresponding code.
+For further analysis (for example, for comparing inferred model rates with real synaptic counts, see notebook `tutorials/2_analysis_alignment.ipynb`). And to reproduce experiments from the paper, see folder `reproducibility_paper`, with all the processed networks used in the study and the corresponding code.
