@@ -21,16 +21,35 @@ We recommend creating a dedicated Python environment. For example, using Python 
 python3.10 -m virtualenv evoalign
 source evoalign/bin/activate
 ```
+### Install the package and its dependencies
 
-Install the package and its dependencies (this should take 1–2 minutes):
+This should take approximately 1–2 minutes:
 
 ```bash
 python -m pip install -e .
 ```
 
-And you are ready to go!
+And you’re ready to go! We recommend starting with the tutorial.
 
-If one wishes to reproduce the exact same environment as in the original paper (run with Python 3.14.4), the requirements are in `requirements.txt` (pip install -r requirements.txt).
+### Run the tutorial
+
+To open the tutorial notebook, start Jupyter:
+
+```bash
+jupyter notebook
+```
+
+Then open `tutorials/0_tutorial.ipynb` in your browser and follow the examples.
+
+### Reproducing the paper's experiments
+
+To reproduce the experiments, install the dependencies listed in `requirements.txt`:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The experiments in `reproducibility_paper/` include the code and instructions needed to reproduce the results reported in the paper.
 
 
 ## Data
