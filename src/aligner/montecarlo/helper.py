@@ -128,7 +128,12 @@ def metropolis_poisson(t, A_r, P_r, betas, Esteps_r, Salpha, b, N, T, step_idx_r
     - @returns: boolean indicating whether the swap was accepted; updates P_r and Esteps_r in place
     """
     #t = np.random.randint(0, T)
-    nodes = np.random.permutation(N)[:2]
+    #nodes = np.random.permutation(N)[:2] --> slower
+    i=np.random.randint(0,N)
+    j=np.random.randint(0,N-1)
+    if j>=i:
+        j+=1
+    nodes=np.array([i,j])
     
     hypo_Pt = generateHypoPerm_t(P_r[b], t, nodes, N)
     dE = helper_poisson.calculateDifEnergy_partial(A_r[b], P_r[b], hypo_Pt, Salpha, t, nodes, N, T)
