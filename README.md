@@ -117,7 +117,7 @@ _________________________________
 
 # Tutorial
 
-The accompanying tutorial demonstrates the main functionalities of the package:
+The accompanying tutorial (expected runtime: ~4 minutes) demonstrates the main functionalities of the package:
 
 * Aligning multiple snapshots of an evolving multigraph or weighted network.
 * Analysing the resulting alignments.
@@ -145,7 +145,7 @@ import pickle
 
 ## 1. Loading and preparing the data
 
-We now load the data. In this example, we will consider a subset of the *C. elegans* connectomes$^{1}$.  
+We now load the data. In this example, we will consider a subset of the *C. elegans* connectomes $^{1}$.  
 
 We will perform a group-guided alignment by considering the spatial location of the neurons (left–right, in the case of bilateral neurons). We use a reduced version of the connectomes containing only 60 neurons (we provide the dataset, but more details are in `reproducibility_paper/data_processing_celegans.ipynb`).  
 
@@ -246,7 +246,7 @@ initial_P = helper_montecarlo.initial_permutation_groups(A, groups) #nodes are o
 ```python
 Esweeps_r, samples, groundState, MCacceptance_rate = helper_montecarlo.sampling_poisson_groups(A=A, 
     P=initial_P, betas=betas, S=MCsteps, sampleFrom=start_sampling, sampleFreq=freq_sampling, 
-    groups=groups, filesave=None)
+    groups=groups, filesave=None) #it takes around 3 minutes
 ```
 
     Sweeps: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 3000/3000 [03:09<00:00, 15.81it/s]
